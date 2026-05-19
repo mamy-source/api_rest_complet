@@ -1,7 +1,5 @@
-import { hr } from "zod/locales";
-
 const roleLevel = {
-    hr: 1,
+    rh: 1,
     admin: 2,
     candidate: 3
 };
