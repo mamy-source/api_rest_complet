@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 //register
 export const register = async (req, res, next) =>{
     try {
+        
         const resultat = await authService.register(req.body);
         res.status(201).json({message: "User registered successfully", resultat})
     } catch (error) {
@@ -14,7 +15,8 @@ export const register = async (req, res, next) =>{
 //login
 export const login = async(req, res, next) =>{
     try {
-        const resultat = await authService.loginService(req.body);
+        const {email, password} = req.body;
+        const resultat = await authService.loginService(email, password);
 
         res.cookie("refreshToken", resultat.refreshToken, {
             httpOnly: true,

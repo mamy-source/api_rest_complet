@@ -7,7 +7,7 @@ export const registerRepository = async (data)=> {
 
 };
 //find by email
-export const findByEmail = async(email) => {
+export const findByEmail = (email) => {
     return prisma.user.findUnique({
         where: {email}
     })

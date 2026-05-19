@@ -1,6 +1,9 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import authRouter from "./routes/auth.route.js";
+import { limiter } from "./middlewares/rateLimit.js";
+
 
 
 const app = express();
@@ -18,6 +21,8 @@ app.use(cors({
     credentials: true
 }));
 
+//auth route
+app.use("/auth",limiter, authRouter);
 
 
 export default app;

@@ -13,7 +13,7 @@ export const register = async(data) =>{
 
         const count = await userCount();
         if (count < 1) {
-            data.role = "admin";
+            data.role = "ADMIN";
         }
 
         const user = await registerRepository({
