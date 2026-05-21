@@ -1,7 +1,7 @@
 const roleLevel = {
-    rh: 1,
-    admin: 2,
-    candidate: 3
+    HR: 1,
+    ADMIN: 2,
+    CANDIDATE: 3
 };
 
 export const allowRole = (minRole) =>{

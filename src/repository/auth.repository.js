@@ -1,4 +1,4 @@
-import { email } from "zod";
+
 import prisma from "../config/prisma.js";
 
 //create user
