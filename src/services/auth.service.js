@@ -1,22 +1,21 @@
 import argon2 from "argon2";
 import { generateRefreshToken, generateAccessToken } from "../utils/generate.token.js";
-import { registerRepository, findByEmail, userCount, findById } from "../repository/auth.repository.js";
-
+import * as authRepo from "../repository/auth.repository.js"
 //register
 export const register = async(data) =>{
     try {
-        const existing = await findByEmail(data.email);
+        const existing = await authRepo.findByEmail(data.email);
         if (existing){
             throw new Error("Email already exists");
         }
         const hashedPassword = await argon2.hash(data.password);
 
-        const count = await userCount();
+        const count = await authRepo.userCount();
         if (count < 1) {
             data.role = "ADMIN";
         }
 
-        const user = await registerRepository({
+        const user = await authRepo.registerRepository({
             fullName: data.fullName,
             email: data.email,
             password: hashedPassword,
@@ -32,7 +31,7 @@ export const register = async(data) =>{
 //login
 export const loginService = async(email, password) => {
     try {
-        const user = await findByEmail(email);
+        const user = await authRepo.findByEmail(email);
         if (!user){
             throw new Error("Invalid credentiels");
         }
@@ -53,7 +52,7 @@ export const loginService = async(email, password) => {
 //profile
 export const profileService = async(userId) =>{
     try {
-        const userProfile = await findById(userId);
+        const userProfile = await authRepo.findById(userId);
         if (!userProfile){
             throw new Error("User not found");
         }
@@ -64,3 +63,54 @@ export const profileService = async(userId) =>{
     }
 }
 
+export const getProfile = async(userId) =>{
+    const profile = await authRepo.getProfileByUserId(userId);
+    if(!profile){
+        throw new Error("Profile not found");
+    }
+    return profile;
+}
+
+
+//create profile
+export const createProfile = async(data) => {
+    try {
+        const existingProfile = await authRepo.getProfileByUserId(data.userId);
+        if (existingProfile){
+            throw new Error("Profile already exists");
+        }
+        const newProfile = await authRepo.createProfile({data})
+        return newProfile;
+
+    } catch (error) {
+        throw error;
+    }
+}
+
+//update profile
+export const updateProfile = async(userId, data) =>{
+    try {
+        const userProfile = await authRepo.getProfileByUserId(userId);
+        if (!userProfile){
+            throw new Error("Profile not found");
+        }
+        const newProfile = await authRepo.updateProfile(userId, data)
+        return newProfile;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+// delete profile
+export const deleteProfile = async (userId) => {
+
+    const existingProfile =
+        await authRepo.getProfileByUserId(userId);
+
+    if (!existingProfile) {
+        throw new Error("Profile not found");
+    }
+
+    return await authRepo.deleteProfile(userId);
+};
